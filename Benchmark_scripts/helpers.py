@@ -30,18 +30,27 @@ def convert_str_to_float(x):
         return x
 
 def read_edstays_table(edstays_table_path):
-    df_edstays = pd.read_csv(edstays_table_path)
+    try:
+        df_edstays = pd.read_csv(edstays_table_path)
+    except:
+        df_edstays = pd.read_csv(edstays_table_path + '.gz', compression='gzip')
     df_edstays['intime'] = pd.to_datetime(df_edstays['intime'])
     df_edstays['outtime'] = pd.to_datetime(df_edstays['outtime'])
     return df_edstays
 
 def read_patients_table(patients_table_path):
-    df_patients = pd.read_csv(patients_table_path)
+    try:
+        df_patients = pd.read_csv(patients_table_path)
+    except:
+        df_patients = pd.read_csv(patients_table_path + '.gz', compression='gzip')
     df_patients['dod'] = pd.to_datetime(df_patients['dod'])
     return df_patients
 
 def read_admissions_table(admissions_table_path):
-    df_admissions = pd.read_csv(admissions_table_path)
+    try:
+        df_admissions = pd.read_csv(admissions_table_path)
+    except:
+        df_admissions = pd.read_csv(admissions_table_path + '.gz', compression='gzip')
     df_admissions = df_admissions.rename(columns={"race": "ethnicity"})
     df_admissions =  df_admissions[['subject_id', 'hadm_id', 'admittime', 'dischtime', 'deathtime','ethnicity', 'edregtime','edouttime', 'insurance']]
     df_admissions['admittime'] = pd.to_datetime(df_admissions['admittime'])
@@ -50,13 +59,19 @@ def read_admissions_table(admissions_table_path):
     return df_admissions
 
 def read_icustays_table(icustays_table_path):
-    df_icu = pd.read_csv(icustays_table_path)
+    try:
+        df_icu = pd.read_csv(icustays_table_path)
+    except:
+        df_icu = pd.read_csv(icustays_table_path + '.gz', compression='gzip')
     df_icu['intime'] = pd.to_datetime(df_icu['intime'])
     df_icu['outtime'] = pd.to_datetime(df_icu['outtime'])
     return df_icu
 
 def read_triage_table(triage_table_path):
-    df_triage = pd.read_csv(triage_table_path)
+    try:
+        df_triage = pd.read_csv(triage_table_path)
+    except:
+        df_triage = pd.read_csv(triage_table_path + '.gz', compression='gzip')
     vital_rename_dict = {vital: '_'.join(['triage', vital]) for vital in ['temperature', 'heartrate', 'resprate', 'o2sat', 'sbp', 'dbp', 'pain', 'acuity']}
     df_triage.rename(vital_rename_dict, axis=1, inplace=True)
     df_triage['triage_pain'] = df_triage['triage_pain'].apply(convert_str_to_float).astype(float)
@@ -64,11 +79,17 @@ def read_triage_table(triage_table_path):
     return df_triage
 
 def read_diagnoses_table(diagnoses_table_path):
-    df_diagnoses = pd.read_csv(diagnoses_table_path)
+    try:
+        df_diagnoses = pd.read_csv(diagnoses_table_path)
+    except:
+        df_diagnoses = pd.read_csv(diagnoses_table_path + '.gz', compression='gzip')
     return df_diagnoses
 
 def read_vitalsign_table(vitalsign_table_path):
-    df_vitalsign = pd.read_csv(vitalsign_table_path)
+    try:
+        df_vitalsign = pd.read_csv(vitalsign_table_path)
+    except:
+        df_vitalsign = pd.read_csv(vitalsign_table_path + '.gz', compression='gzip')
     vital_rename_dict = {vital: '_'.join(['ed', vital]) for vital in
                          ['temperature', 'heartrate', 'resprate', 'o2sat', 'sbp', 'dbp', 'rhythm', 'pain']}
     df_vitalsign.rename(vital_rename_dict, axis=1, inplace=True)
@@ -77,7 +98,10 @@ def read_vitalsign_table(vitalsign_table_path):
     return df_vitalsign
 
 def read_pyxis_table(pyxis_table_path):
-    df_pyxis = pd.read_csv(pyxis_table_path)
+    try:
+        df_pyxis = pd.read_csv(pyxis_table_path)
+    except:
+        df_pyxis = pd.read_csv(pyxis_table_path + '.gz', compression='gzip')
     return df_pyxis
 
 def merge_edstays_patients_on_subject(df_edstays,df_patients):
